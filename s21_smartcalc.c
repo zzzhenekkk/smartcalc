@@ -11,8 +11,6 @@ int smart_calc (char * src, long double * result) {
       find_one_char(&input_list, &src); // если подряд знаки - тоже ошибка
       find_func(&input_list, &src); //
       skip_space(&src);
-      // src++;
-      
     }
     printNode(head);
 
