@@ -92,7 +92,7 @@ int checkBrackets(node_t *input_head);
 void skip_space(char **src);
 
 // определение функции из 1 символа
-int find_one_char (node_t ** input_list, char ** src);
+void find_one_char (node_t ** input_list, char ** src);
 
 // определение функции из 2-4 символов
 int find_func (node_t ** input_list, char ** src);

@@ -1,12 +1,5 @@
 #include "s21_smartcalc.h"
 
-int main() {
-  char str[200] = "123.4+sin(2*x)";
-  long double k =0.;
-  smart_calc(str, &k);
-  return 0;
-}
-
 int smart_calc (char * src, long double * result) {
   int status = SUCCESS;
   node_t * input_list = init_node();
@@ -53,6 +46,7 @@ int find_func (node_t ** input_list, char ** src) {
       int length_number = 0;
       int func_found = 0;
 
+
       length_number = strspn(*src, "mod");
       if (length_number) {
         *input_list = add_elem(*input_list, 0., MOD);
@@ -63,7 +57,7 @@ int find_func (node_t ** input_list, char ** src) {
       
       // подправить
       length_number = strspn(*src, "asin");
-      if (length_number) {
+      if (length_number == 4) {
         *input_list = add_elem(*input_list, 0., ASIN);
         *src += length_number;
         length_number = 0;
@@ -71,7 +65,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "sin");
-      if (length_number) {
+      if (length_number == 3) {
         *input_list = add_elem(*input_list, 0., SIN);
         *src += length_number;
         length_number = 0;
@@ -79,7 +73,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "acos");
-      if (length_number) {
+      if (length_number == 4) {
         *input_list = add_elem(*input_list, 0., ACOS);
         *src += length_number;
         length_number = 0;
@@ -87,7 +81,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "cos");
-      if (length_number) {
+      if (length_number == 3) {
         *input_list = add_elem(*input_list, 0., COS);
         *src += length_number;
         length_number = 0;
@@ -95,7 +89,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "atan");
-      if (length_number) {
+      if (length_number == 4) {
         *input_list = add_elem(*input_list, 0., ATAN);
         *src += length_number;
         length_number = 0;
@@ -103,7 +97,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "tan");
-      if (length_number) {
+      if (length_number == 3) {
         *input_list = add_elem(*input_list, 0., TAN);
         *src += length_number;
         length_number = 0;
@@ -111,7 +105,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "ln");
-      if (length_number) {
+      if (length_number == 2) {
         *input_list = add_elem(*input_list, 0., LN);
         *src += length_number;
         length_number = 0;
@@ -119,7 +113,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "log");
-      if (length_number) {
+      if (length_number == 3) {
         *input_list = add_elem(*input_list, 0., LOG);
         *src += length_number;
         length_number = 0;
@@ -127,7 +121,7 @@ int find_func (node_t ** input_list, char ** src) {
       }
 
       length_number = strspn(*src, "pow");
-      if (length_number) {
+      if (length_number == 3) {
         *input_list = add_elem(*input_list, 0., POW);
         *src += length_number;
         length_number = 0;
@@ -136,7 +130,7 @@ int find_func (node_t ** input_list, char ** src) {
 
 
       length_number = strspn(*src, "sqrt");
-      if (length_number) {
+      if (length_number == 4) {
         *input_list = add_elem(*input_list, 0., SQRT);
         *src += length_number;
         length_number = 0;
@@ -148,24 +142,26 @@ int find_func (node_t ** input_list, char ** src) {
 }
 
 // определение функции из 1 символа
-int find_one_char (node_t ** input_list, char ** src) {
+void find_one_char (node_t ** input_list, char ** src) {
       int length_number = 0;
-      if (**src == '+') 
-        if (((*input_list)->prev == NULL) || ((*input_list)->prev->token.type == OPEN_BRACKET)) {
+      if (**src == '+') {
+        if (((*input_list)->prev == NULL) || ((*input_list)->token.type == OPEN_BRACKET)) {
           *input_list = add_elem(*input_list, 0., UNARY_PLUS);
           (*src)++;
         } else {
           *input_list = add_elem(*input_list, 0., BINARY_PLUS);
           (*src)++;
         }
-      if (**src == '-') 
-        if (((*input_list)->prev == NULL) || ((*input_list)->prev->token.type == OPEN_BRACKET)) {
+      }
+      if (**src == '-') {
+        if (((*input_list)->prev == NULL) || ((*input_list)->token.type == OPEN_BRACKET)) {
           *input_list = add_elem(*input_list, 0., UNARY_MINUS);
           (*src)++;
         } else {
           *input_list = add_elem(*input_list, 0., BINARY_MINUS);
           (*src)++;
         }   
+      }
       if (**src == '/') {
           *input_list = add_elem(*input_list, 0., DIV);
           (*src)++;
@@ -179,14 +175,14 @@ int find_one_char (node_t ** input_list, char ** src) {
           (*src)++;
       }
       if (**src == ')') {
-          *input_list = add_elem(*input_list, 0., OPEN_BRACKET);
+          *input_list = add_elem(*input_list, 0., CLOSE_BRACKET);
           (*src)++;
       }
       if (**src == 'x') {
           *input_list = add_elem(*input_list, 0., X_NUMBER);
           (*src)++;
       }
-
+  
 }
 
 // задаем новый список
@@ -269,13 +265,14 @@ void skip_space(char **src) {
 
 void printNode(node_t *head) {
     node_t *current = head;
-
+    char type [25][25] = {"EMPTY", "NUMBER", "X", "B+", "B-", "U-", "U+", "*", "/", "mod", "cos", "sin", "tan", "acos", "asin", "atan", "sqrt", "ln", "log", "pow", "(", ")"};
     while (current != NULL) {
         node_t *next = current->next;
         if (current->token.type == NUMBER)
-            printf("%Lf\n", current->token.num);
+            printf(" %Lf ", current->token.num);
         else
-            printf("(%d)\n", current->token.type);
+            printf(" %s ", type[current->token.type+1]);
         current = next;
     }
 }
+
