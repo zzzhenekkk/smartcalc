@@ -69,7 +69,7 @@ typedef struct node {
   token_t token;
 } node_t;
 
-int smart_calc(char * src, long double * result);
+/************************************* РАБОТА СО СПИСКАМИ **************************************************/
 
 // задаем новый список
 node_t * init_node ();
@@ -89,8 +89,21 @@ void remove_node(node_t *cur);
 // вывод всего листа
 void printNode(node_t *head);
 
+/************************************* ФУНКЦИИ ПРОВЕРОК **************************************************/
+
+// возвращает приоритет у лексемы
+int priority(node_t * cur);
+
 // проверка на корректность введенных скобок
 int checkBrackets(node_t *input_head);
+
+
+
+// основная функция
+int smart_calc(char * src, long double * result);
+
+// перевод в польскую нотцию
+int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list);
 
 void skip_space(char **src);
 
@@ -103,7 +116,6 @@ int find_func (node_t ** input_list, char ** src);
 // определение числа
 int find_number (node_t ** input_list, char ** src);
 
-// возвращает приоритет у лексемы
-int priority(node_t * cur);
+
 
 #endif  // S21_SMARTCALC

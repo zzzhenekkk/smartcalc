@@ -1,6 +1,6 @@
 #include "s21_smartcalc.h"
 
-int smart_calc (char * src, long double * result) {
+int smart_calc(char * src, long double * result) {
   int status = SUCCESS;
   node_t * input_list = init_node();
 
@@ -14,12 +14,12 @@ int smart_calc (char * src, long double * result) {
     printNode(head);
 
     // выходной список, вначале для оп,ерандов а потом для операция
-    node_t * output_list = init_node();
-    // стек для операций, и их череда
-    node_t * stack_list = init_node();
+    // node_t * output_list = init_node();
+    // // стек для операций, и их череда
+    // node_t * stack_list = init_node();
 
-    // собираем обратную польскую нотацию по алгоритму декстеры
-    polish_notattion (input_list, &src, &output_list, &stack_list);
+    // // собираем обратную польскую нотацию по алгоритму декстеры
+    // polish_notattion (input_list, &src, &output_list, &stack_list);
 
     // считаем обратную польскую нотацию 
     // long double calculate_polish_not () {}
@@ -31,7 +31,7 @@ int smart_calc (char * src, long double * result) {
 }
 
 // собираем обратную польскую нотацию по алгоритму декстеры
-int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list) {
+int polish_notattion(node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list) {
   int status = SUCCESS;
   while (input_list->next != NULL) {
 
@@ -49,13 +49,13 @@ int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, n
     // распределяем из input в output или стек
     if (input_list->token.type == NUMBER) {
       *output_list = add_elem (*output_list, input_list->token.num, input_list->token.type);
-    } else if ( priority(input_list->token.type) == 1) {
+    } else if ( priority(input_list) == 1) {
         // для унарного минуса добавляем 0 в output_list
         if (input_list->token.type == UNARY_MINUS) {
           *output_list = add_elem (*output_list, 0., NUMBER);
         }
         *stack_list = add_elem (*output_list, input_list->token.num, input_list->token.type);
-    } else if (priority(input_list->token.type) >= 2 && priority(input_list->token.type) <= 5 && input_list->token.type != CLOSE_BRACKET) {
+    } else if (priority(input_list) >= 2 && priority(input_list) <= 5 && input_list->token.type != CLOSE_BRACKET) {
         *stack_list = add_elem (*output_list, input_list->token.num, input_list->token.type);
     } 
 
@@ -80,11 +80,13 @@ int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, n
 
 // заполнение input_list лексемами из строки
 void input_input_list (node_t ** input_list, char ** src) {
-  while (*src) {
-        find_number(&input_list, &src); // если точек > 1 : выдать ошбку
-        find_one_char(&input_list, &src); // если подряд знаки - тоже ошибка
-        find_func(&input_list, &src); //
-        skip_space(&src);
+  while (**src != '\0') {
+        find_number(input_list, src); // если точек > 1 : выдать ошбку
+        find_one_char(input_list, src); // если подряд знаки - тоже ошибка
+        find_func(input_list, src); //
+        skip_space(src);
+        printf("%s\n", *src);
+        sleep(1);
   }
 }
 

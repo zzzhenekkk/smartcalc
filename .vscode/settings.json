@@ -57,6 +57,8 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "complex": "c"
+    "s21_smartcalc.h": "c",
+    "bit": "c"
+    // "complex": "c"
   }
 }
