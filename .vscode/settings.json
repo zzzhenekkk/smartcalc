@@ -58,7 +58,8 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "s21_smartcalc.h": "c",
-    "bit": "c"
-    // "complex": "c"
+    "bit": "c",
+    "__locale": "c",
+    "ios": "c"
   }
 }

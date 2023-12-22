@@ -60,7 +60,7 @@ typedef enum { EMPTY = -1,
 
 typedef struct token {
     token_type type;
-    long double num;
+    double num;
 } token_t;
 
 typedef struct node {
@@ -75,7 +75,7 @@ typedef struct node {
 node_t * init_node ();
 
 // добавить элемент в конец списка, с указателем на предыдущий токен, значением и типом, отдает указатель на текущий
-node_t * add_elem (node_t * prev, long double num, token_type type);
+node_t * add_elem (node_t * prev, double num, token_type type);
 
 // удалить элемент с конца списка, отдает ссылку на предыдущий элемент или null
 node_t * del_elem (node_t * cur);
@@ -97,13 +97,20 @@ int priority(node_t * cur);
 // проверка на корректность введенных скобок
 int checkBrackets(node_t *input_head);
 
+// проверяет бинарный ли перед нами оператор, 1 - да
+int is_binary(node_t * cur);
+
 
 
 // основная функция
-int smart_calc(char * src, long double * result);
+int smart_calc(char * src, double * result);
 
 // перевод в польскую нотцию
 int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list);
+
+double for_binary(node_t *stack, double num_1, double num_2);
+
+double for_unary(node_t *stack, double num_1);
 
 void skip_space(char **src);
 
@@ -115,6 +122,9 @@ int find_func (node_t ** input_list, char ** src);
 
 // определение числа
 int find_number (node_t ** input_list, char ** src);
+
+// подсчет выражения по полученной польской нотации
+double calculate(node_t * output_list, double x);
 
 
 
