@@ -3,23 +3,89 @@
 int smart_calc (char * src, long double * result) {
   int status = SUCCESS;
   node_t * input_list = init_node();
+
   node_t * head = input_list;
+
   if (src) {
     status = SUCCESS;
-    while (*src) {
-      find_number(&input_list, &src); // если точек > 1 : выдать ошбку
-      find_one_char(&input_list, &src); // если подряд знаки - тоже ошибка
-      find_func(&input_list, &src); //
-      skip_space(&src);
-    }
+    // заполнение input_list лексемами из строки
+    input_input_list (&input_list, &src);
+    // печатаем все лексемы
     printNode(head);
 
+    // выходной список, вначале для оп,ерандов а потом для операция
+    node_t * output_list = init_node();
+    // стек для операций, и их череда
+    node_t * stack_list = init_node();
 
+    // собираем обратную польскую нотацию по алгоритму декстеры
+    polish_notattion (input_list, &src, &output_list, &stack_list);
+
+    // считаем обратную польскую нотацию 
+    // long double calculate_polish_not () {}
   } else 
     status = FAILURE;
 
 
   return status;
+}
+
+// собираем обратную польскую нотацию по алгоритму декстеры
+int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list) {
+  int status = SUCCESS;
+  while (input_list->next != NULL) {
+
+    // ситуация если закрывающая скобка
+    if (input_list->token.type == CLOSE_BRACKET) {
+      // проходимся в цикле, и выплевывем все из стека в output_list
+      while ((*stack_list)->prev->token.type != OPEN_BRACKET) {
+        *output_list = add_elem (*stack_list, (*stack_list)->token.num, (*stack_list)->token.type);
+        *stack_list = del_elem (*stack_list);
+      }
+      *stack_list = del_elem (*stack_list); // удаляем открывающуюся скобку
+    }
+
+
+    // распределяем из input в output или стек
+    if (input_list->token.type == NUMBER) {
+      *output_list = add_elem (*output_list, input_list->token.num, input_list->token.type);
+    } else if ( priority(input_list->token.type) == 1) {
+        // для унарного минуса добавляем 0 в output_list
+        if (input_list->token.type == UNARY_MINUS) {
+          *output_list = add_elem (*output_list, 0., NUMBER);
+        }
+        *stack_list = add_elem (*output_list, input_list->token.num, input_list->token.type);
+    } else if (priority(input_list->token.type) >= 2 && priority(input_list->token.type) <= 5 && input_list->token.type != CLOSE_BRACKET) {
+        *stack_list = add_elem (*output_list, input_list->token.num, input_list->token.type);
+    } 
+
+    
+
+    // ситуация если приоритет текущего меньше или равен предыдущему
+      // if (priority (input_list->token.type) <= priority ((*stack_list)->prev->token.type) ) {
+
+    //   *stack_list = del_elem (*stack_list); // удаляем закрывающуюся скобку
+    //   // проходимся в цикле, и выплевывем все из стека в output_list
+    //   while ((*stack_list)->prev->token.type != OPEN_BRACKET) {
+    //     *output_list = add_elem (*stack_list, (*stack_list)->token.num, (*stack_list)->token.type);
+    //     *stack_list = del_elem (*stack_list);
+    //   }
+    //   *stack_list = del_elem (*stack_list); // удаляем открывающуюся скобку
+    // }
+    // input_list = input_list->next;
+  }
+
+  return status;
+}
+
+// заполнение input_list лексемами из строки
+void input_input_list (node_t ** input_list, char ** src) {
+  while (*src) {
+        find_number(&input_list, &src); // если точек > 1 : выдать ошбку
+        find_one_char(&input_list, &src); // если подряд знаки - тоже ошибка
+        find_func(&input_list, &src); //
+        skip_space(&src);
+  }
 }
 
 // определение числа
@@ -274,3 +340,18 @@ void printNode(node_t *head) {
     }
 }
 
+int priority(node_t * cur) {
+  int prior = 0;
+  if (cur->token.type <= 5 && cur->token.type >= 2) {
+    prior = 1;
+  } else if (cur->token.type >= 6 && cur->token.type <= 8) {
+    prior = 2;
+  } else if (cur->token.type >= 9 && cur->token.type <= 17) {
+    prior = 3;
+  } else if (cur->token.type = 18) {
+    prior = 4;
+  } else if (cur->token.type = 18) {
+    prior = 5;
+  }
+  return prior;
+}

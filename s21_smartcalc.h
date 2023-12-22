@@ -31,16 +31,16 @@
 typedef enum { EMPTY = -1,
                NUMBER,
                X_NUMBER,
-// 0 плюсы минусы
+// 1 плюсы минусы
                BINARY_PLUS,
                BINARY_MINUS,
                UNARY_MINUS,
                UNARY_PLUS,
-// 1 умножение деление остаток
+// 2 умножение деление остаток
                MULT,
                DIV,
                MOD,
-// 2 функции
+// 3 функции
                COS,
                SIN,
                TAN,
@@ -50,9 +50,9 @@ typedef enum { EMPTY = -1,
                SQRT,
                LN,
                LOG, 
-// 3 степень
+// 4 степень
                POW,
-// 4 скобки
+// 5 скобки
                OPEN_BRACKET,
                CLOSE_BRACKET,
 } token_type;
@@ -80,6 +80,9 @@ node_t * add_elem (node_t * prev, long double num, token_type type);
 // удалить элемент с конца списка, отдает ссылку на предыдущий элемент или null
 node_t * del_elem (node_t * cur);
 
+// заполнение входного списка лексемами из строки
+void input_input_list (node_t ** input_list, char ** src);
+
 // полностью очистить список с текущего элемента
 void remove_node(node_t *cur);
 
@@ -99,5 +102,8 @@ int find_func (node_t ** input_list, char ** src);
 
 // определение числа
 int find_number (node_t ** input_list, char ** src);
+
+// возвращает приоритет у лексемы
+int priority(node_t * cur);
 
 #endif  // S21_SMARTCALC
