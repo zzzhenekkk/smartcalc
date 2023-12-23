@@ -2,11 +2,9 @@
 
 int smart_calc(char * src, double * result) {
   int status = SUCCESS;
-  node_t * input_list = init_node();
-
-  node_t * head_input = input_list;
-
   if (src) {
+    node_t * input_list = init_node();
+    node_t * head_input = input_list;
     status = SUCCESS;
     // заполнение input_list лексемами из строки
     input_input_list (&input_list, &src);
@@ -22,21 +20,27 @@ int smart_calc(char * src, double * result) {
     node_t * head_output = output_list;
     // собираем обратную польскую нотацию по алгоритму декстеры
     
-    polish_notattion (head_input, &src, &output_list, &stack_list);
+    polish_notattion (head_input, &output_list, &stack_list);
 
     printNode(head_output);
-    printf("%lf", calculate(head_output, 0.));
-    // считаем обратную польскую нотацию 
-    // double calculate_polish_not () {}
+    *result = calculate(head_output, &status);
+    printf("%lf", *result);
+  
+  // зачищаем все списки
+    remove_node(stack_list);
+    remove_node(output_list);
+    remove_node(input_list);
   } else 
     status = FAILURE;
 
+  // зачищаем все списки
+    
 
   return status;
 }
 
 // собираем обратную польскую нотацию по алгоритму декстеры
-int polish_notattion(node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list) {
+int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack_list) {
   int status = SUCCESS;
   while (input_list != NULL) {
     
@@ -94,12 +98,12 @@ int polish_notattion(node_t * input_list, char ** src, node_t ** output_list, no
 }
 
 // подсчет выражения по полученной польской нотации
-double calculate(node_t * output_list, double x) {
+double calculate(node_t * output_list, int * status) {
   node_t *stack = init_node();
   double buf = 0.;
   double buf2 = 0.;
   while (output_list != NULL) {
-    // есл число - кладем в стек
+    // еси число - кладем в стек
     if (output_list->token.type == NUMBER || output_list->token.type == X_NUMBER) {
       stack = add_elem (stack, output_list->token.num, output_list->token.type);
     }
@@ -116,7 +120,7 @@ double calculate(node_t * output_list, double x) {
       }
     }
     else {
-      printf("error\n");
+      *status = FAILURE;
     }
   output_list = output_list->next;
   }
@@ -210,7 +214,7 @@ int find_number (node_t ** input_list, char ** src) {
 int find_func (node_t ** input_list, char ** src) {
       int status = FAILURE;
       int length_number = 0;
-      int func_found = 0;
+
 
 
       length_number = strspn(*src, "mod");
@@ -309,7 +313,6 @@ int find_func (node_t ** input_list, char ** src) {
 
 // определение функции из 1 символа
 void find_one_char (node_t ** input_list, char ** src) {
-      int length_number = 0;
       if (**src == '+') {
         if (((*input_list)->prev == NULL) || ((*input_list)->token.type == OPEN_BRACKET)) {
           *input_list = add_elem(*input_list, 0., UNARY_PLUS);
@@ -416,8 +419,11 @@ node_t * del_elem (node_t * cur) {
   return prev;
 }
 
-// полностью очистить список с текущего элемента
+// полностью очистить список с любого элемента
 void remove_node(node_t *cur) {
+  // переходим в самый конец для очистки
+  while (cur->next) 
+    cur = cur->next;
   while (cur != NULL) {
     struct node *prev = cur->prev;
     free(cur);

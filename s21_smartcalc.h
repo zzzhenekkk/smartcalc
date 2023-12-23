@@ -83,7 +83,7 @@ node_t * del_elem (node_t * cur);
 // заполнение входного списка лексемами из строки
 void input_input_list (node_t ** input_list, char ** src);
 
-// полностью очистить список с текущего элемента
+// полностью очистить список с любого элемента
 void remove_node(node_t *cur);
 
 // вывод всего листа
@@ -106,7 +106,7 @@ int is_binary(node_t * cur);
 int smart_calc(char * src, double * result);
 
 // перевод в польскую нотцию
-int polish_notattion (node_t * input_list, char ** src, node_t ** output_list, node_t ** stack_list);
+int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack_list);
 
 double for_binary(node_t *stack, double num_1, double num_2);
 
@@ -124,7 +124,7 @@ int find_func (node_t ** input_list, char ** src);
 int find_number (node_t ** input_list, char ** src);
 
 // подсчет выражения по полученной польской нотации
-double calculate(node_t * output_list, double x);
+double calculate(node_t * output_list, int * status);
 
 
 
