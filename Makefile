@@ -32,7 +32,7 @@ s21_covered:
 
 style:
 	clang-format -style=google -i test/$(TESTS)*.c $(TESTS).c $(S21_CALC_C) $(S21_CALC_H) $(CPP_FILES)
-	cppcheck --enable=all --inconclusive --suppress=missingIncludeSystem s21_decimal.c test/$(TESTS)*.c $(TESTS).c $(S21_CALC_C) $(S21_CALC_H)
+	cppcheck --enable=all --inconclusive --suppress=missingIncludeSystem s21_smartcalc.c test/$(TESTS)*.c $(TESTS).c $(S21_CALC_C) $(S21_CALC_H)
 
 test: clean s21_covered
 	$(CC) test/$(TESTS)*.c $(TESTS).c -c $(FLAGS) --coverage

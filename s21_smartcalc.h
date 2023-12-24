@@ -110,7 +110,7 @@ int is_binary(node_t * cur);
 int smart_calc(char * src, double * result);
 
 // перевод в польскую нотцию
-int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack_list);
+int polish_notattion(node_t * input_list, node_t ** output_list);
 
 int for_binary(double * res, node_t *stack, double num_1, double num_2);
 

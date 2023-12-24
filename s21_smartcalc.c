@@ -1,39 +1,20 @@
 #include "s21_smartcalc.h"
 
-// int smart_calc(char * src, double * result) {
-//   int status = SUCCESS;
-//   if (src) {
-//     node_t * input_list = init_node();
-//     node_t * head_input = input_list;
-//     status = SUCCESS;
-//     // заполнение input_list лексемами из строки
-//     input_input_list (&input_list, &src);
-//     // печатаем все лексемы
-//     // printNode(head_input);
-//     // printf("\n");
+int smart_calc(char * src, double * result) {
+  int status = SUCCESS;
+  *result = 0.;
+  node_t * output_list = NULL;
+  status = convert_polish_notation (&output_list, src);
+  // printNode(output_list);
 
-//     // выходной список, вначале для оп,ерандов а потом для операция
-//     node_t * output_list = init_node();
-//     // стек для операций, и их череда
-//     node_t * stack_list = init_node();
+  if (status == SUCCESS)
+    status = calculate (output_list, result, 0., GRAPH_OFF);
 
-//     node_t * head_output = output_list;
-//     // собираем обратную польскую нотацию по алгоритму декстеры
-    
-//     polish_notattion (head_input, &output_list, &stack_list);
-
-//     printNode(head_output);
-//     *result = calculate(head_output, &status);
-//     printf("%lf", *result);
+  // printf("\n%d %lf", status, result);
+  remove_node(output_list);
   
-//   // зачищаем все списки
-//     remove_node(stack_list);
-//     remove_node(output_list);
-//     remove_node(input_list);
-//   } else 
-//     status = FAILURE;
-//   return status;
-// }
+  return status;
+}
 
 
 // отдельно считаем польскую нотацию из строки, и отдаем список 
@@ -51,32 +32,27 @@ int convert_polish_notation (node_t ** output_list, char * src) {
     // printf("\n");
 
     //  проверяем на корректные скобки
-    status = check_brackets(input_list);
+    // status = check_brackets(input_list);
 
     if (status == SUCCESS) {
       // выходной список, вначале для оп,ерандов а потом для операция
       *output_list = init_node();
 
-      // стек для операций, и их череда
-      node_t * stack_list = init_node();
+  
 
-      node_t * head_output = output_list;
+      node_t * head_output = *output_list;
       // собираем обратную польскую нотацию по алгоритму декстеры
       
 
-      status = polish_notattion (head_input, &output_list, &stack_list);
+      status = polish_notattion (head_input, output_list);
 
       *output_list = head_output;
 
       // зачищаем стек
-      remove_node(stack_list);
+      remove_node(input_list);
+
+
     }
-
-
-    
-
-    // зачищаем список
-    remove_node(input_list);
   }
     return status;
 }
@@ -90,30 +66,33 @@ int convert_polish_notation (node_t ** output_list, char * src) {
 
 
 // собираем обратную польскую нотацию по алгоритму декстеры
-int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack_list) {
+int polish_notattion(node_t * input_list, node_t ** output_list) {
   int status = SUCCESS;
+
+  node_t * stack_list = init_node();
+
   while (input_list != NULL) {
     
     // printNode(input_list);
     // printNode(*output_list);
-    // printNode(*stack_list);
+    // printNode(stack_list);
 
     // ситуация если закрывающая скобка
     if (input_list->token.type == CLOSE_BRACKET) {
       // проходимся в цикле, и выплевывем все из стека в output_list
-      while ((*stack_list)->token.type != OPEN_BRACKET) {
-        *output_list = add_elem (*output_list, (*stack_list)->token.num, (*stack_list)->token.type);
-        *stack_list = del_elem (*stack_list);
+      while ((stack_list)->token.type != OPEN_BRACKET) {
+        *output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
+        stack_list = del_elem (stack_list);
       }
-      *stack_list = del_elem (*stack_list); // удаляем открывающуюся скобку
+      stack_list = del_elem (stack_list); // удаляем открывающуюся скобку
     }
 
     // если приоретет <= то выплевываем до открывающейся скобки, либо до начала
-    if ((priority(input_list) <= priority(*stack_list)) && (priority(input_list) != 0) && (priority(input_list) != 5) && (input_list->token.type != UNARY_PLUS)) {
+    if ((priority(input_list) <= priority(stack_list)) && (priority(input_list) != 0) && (priority(input_list) != 5) && (input_list->token.type != UNARY_PLUS)) {
       // проходимся в цикле, и выплевывем все из стека в output_list
-      while ((*stack_list)->token.type != OPEN_BRACKET && (*stack_list)->token.type != EMPTY ) {
-        *output_list = add_elem (*output_list, (*stack_list)->token.num, (*stack_list)->token.type);
-        *stack_list = del_elem (*stack_list);
+      while ((stack_list)->token.type != OPEN_BRACKET && (stack_list)->token.type != EMPTY ) {
+        *output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
+        stack_list = del_elem (stack_list);
       }
     }
 
@@ -130,19 +109,19 @@ int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack
           input_list->token.type = BINARY_MINUS;
         } 
         if (input_list->token.type != UNARY_PLUS)
-          *stack_list = add_elem (*stack_list, input_list->token.num, input_list->token.type);
+          stack_list = add_elem (stack_list, input_list->token.num, input_list->token.type);
     }
     input_list = input_list->next;
   }
 
   // input_list закончился, нужно выплюнуть из стека все, что там есть
-  while ((*stack_list)->token.type != EMPTY) {
-    *output_list = add_elem (*output_list, (*stack_list)->token.num, (*stack_list)->token.type);
-    *stack_list = del_elem (*stack_list);
+  while ((stack_list)->token.type != EMPTY) {
+    *output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
+    stack_list = del_elem (stack_list);
   }
 
   // зачищаем стек
-  remove_node(*stack_list);
+  remove_node(stack_list);
 
   return status;
 }
@@ -157,7 +136,7 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
 
 
   while (output_list != NULL && status == SUCCESS) {
-
+    if (output_list->token.type == EMPTY) output_list = output_list->next;
     // если число - кладем в стек
     if (output_list->token.type == NUMBER || output_list->token.type == X_NUMBER) {
       if (graph) {
@@ -181,13 +160,13 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
         buf2 = stack->prev->token.num;
         stack = del_elem(stack);
         // if (buf2 == 0.) status = 
-        status = for_binary(&stack->token.num, output_list, buf, buf2);
+        status = for_binary(&stack->token.num, output_list, buf2, buf);
       }
     }
     else {
       status = FAILURE;
     }
-  output_list = output_list->next;
+    output_list = output_list->next;
   }
   
   *result = stack->token.num;
