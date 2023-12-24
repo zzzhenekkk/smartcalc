@@ -40,7 +40,7 @@ else
 endif
 
 clean:
-	rm -rf $(TESTS) *.a *.o *.gcda *.gcno *.gcov *.info *.html report
+	rm -rf $(TESTS) *.a *.o *.gcda *.gcno *.gcov *.info *.html report *_e
 
 rebuild: clean all
 
@@ -52,3 +52,7 @@ gcov_report: test
 evgeniy: clean
 	$(CC) $(CFLAGS) -g s21*.c evgeniy.c -o evgeniy_e
 	./evgeniy_e
+
+andrey: clean
+	$(CC) -g s21*.c andrey.c -o andrey_e
+	./andrey_e
