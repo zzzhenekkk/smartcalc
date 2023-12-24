@@ -1,43 +1,93 @@
 #include "s21_smartcalc.h"
 
-int smart_calc(char * src, double * result) {
+// int smart_calc(char * src, double * result) {
+//   int status = SUCCESS;
+//   if (src) {
+//     node_t * input_list = init_node();
+//     node_t * head_input = input_list;
+//     status = SUCCESS;
+//     // заполнение input_list лексемами из строки
+//     input_input_list (&input_list, &src);
+//     // печатаем все лексемы
+//     // printNode(head_input);
+//     // printf("\n");
+
+//     // выходной список, вначале для оп,ерандов а потом для операция
+//     node_t * output_list = init_node();
+//     // стек для операций, и их череда
+//     node_t * stack_list = init_node();
+
+//     node_t * head_output = output_list;
+//     // собираем обратную польскую нотацию по алгоритму декстеры
+    
+//     polish_notattion (head_input, &output_list, &stack_list);
+
+//     printNode(head_output);
+//     *result = calculate(head_output, &status);
+//     printf("%lf", *result);
+  
+//   // зачищаем все списки
+//     remove_node(stack_list);
+//     remove_node(output_list);
+//     remove_node(input_list);
+//   } else 
+//     status = FAILURE;
+//   return status;
+// }
+
+
+// отдельно считаем польскую нотацию из строки, и отдаем список 
+int convert_polish_notation (node_t ** output_list, char * src) {
   int status = SUCCESS;
   if (src) {
     node_t * input_list = init_node();
     node_t * head_input = input_list;
     status = SUCCESS;
+
     // заполнение input_list лексемами из строки
     input_input_list (&input_list, &src);
     // печатаем все лексемы
-    printNode(head_input);
-    printf("\n");
+    // printNode(head_input);
+    // printf("\n");
 
-    // выходной список, вначале для оп,ерандов а потом для операция
-    node_t * output_list = init_node();
-    // стек для операций, и их череда
-    node_t * stack_list = init_node();
+    //  проверяем на корректные скобки
+    status = check_brackets(input_list);
 
-    node_t * head_output = output_list;
-    // собираем обратную польскую нотацию по алгоритму декстеры
+    if (status == SUCCESS) {
+      // выходной список, вначале для оп,ерандов а потом для операция
+      *output_list = init_node();
+
+      // стек для операций, и их череда
+      node_t * stack_list = init_node();
+
+      node_t * head_output = output_list;
+      // собираем обратную польскую нотацию по алгоритму декстеры
+      
+
+      status = polish_notattion (head_input, &output_list, &stack_list);
+
+      *output_list = head_output;
+
+      // зачищаем стек
+      remove_node(stack_list);
+    }
+
+
     
-    polish_notattion (head_input, &output_list, &stack_list);
 
-    printNode(head_output);
-    *result = calculate(head_output, &status);
-    printf("%lf", *result);
-  
-  // зачищаем все списки
-    remove_node(stack_list);
-    remove_node(output_list);
+    // зачищаем список
     remove_node(input_list);
-  } else 
-    status = FAILURE;
-
-  // зачищаем все списки
-    
-
-  return status;
+  }
+    return status;
 }
+
+  // int calc (node_t * head_output, double * result, double x) {
+  //   int status = SUCCESS;
+  //   result = calculate(head_output, &status);
+  //   return status;
+  // }
+
+
 
 // собираем обратную польскую нотацию по алгоритму декстеры
 int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack_list) {
@@ -98,36 +148,51 @@ int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack
 }
 
 // подсчет выражения по полученной польской нотации
-double calculate(node_t * output_list, int * status) {
+int calculate(node_t * output_list, double * result, double x, int graph) {
+  int status = SUCCESS;
+
   node_t *stack = init_node();
   double buf = 0.;
   double buf2 = 0.;
-  while (output_list != NULL) {
-    // еси число - кладем в стек
+
+
+  while (output_list != NULL && status == SUCCESS) {
+
+    // если число - кладем в стек
     if (output_list->token.type == NUMBER || output_list->token.type == X_NUMBER) {
-      stack = add_elem (stack, output_list->token.num, output_list->token.type);
+      if (graph) {
+        stack = add_elem (stack, x, output_list->token.type);
+      } else {
+        if (output_list->token.type == X_NUMBER) {
+          status = GRAPH_X;
+          break;
+        }
+        stack = add_elem (stack, output_list->token.num, output_list->token.type);
+      }
+
     }
     else if (output_list->token.type != EMPTY && priority(output_list) != 5){
       if (!is_binary(output_list)) {
         buf = stack->token.num;
-        stack->token.num = for_unary(output_list, buf);
+        status = for_unary(&stack->token.num, output_list, buf);
       }
       else {
         buf = stack->token.num;
         buf2 = stack->prev->token.num;
         stack = del_elem(stack);
-        stack->token.num = for_binary(output_list, buf, buf2);
+        // if (buf2 == 0.) status = 
+        status = for_binary(&stack->token.num, output_list, buf, buf2);
       }
     }
     else {
-      *status = FAILURE;
+      status = FAILURE;
     }
   output_list = output_list->next;
   }
   
-  buf = stack->token.num;
+  *result = stack->token.num;
   remove_node(stack);
-  return buf;
+  return status;
 }
 
 // проверяет бинарный ли перед нами оператор, 1 - да
@@ -138,48 +203,91 @@ int is_binary(node_t * cur) {
   return answer;
 }
 
-double for_binary(node_t *stack, double num_1, double num_2) {
+int for_binary(double * res, node_t *stack, double num_1, double num_2) {
+    int status = SUCCESS;
     token_type oper = stack->token.type;
-    double res = 0.;
+    *res = 0.;
+
     if (oper == BINARY_PLUS)
-        res = num_1 + num_2;
+        *res = num_1 + num_2;
     else if (oper == BINARY_MINUS)
-        res = num_1 - num_2;
-    else if (oper == DIV)
-        res = num_1 / num_2;
-    else if (oper == MULT)
-        res = num_1 * num_2;
-    else if (oper == MOD)
-        res = fmod(num_1, num_2);
-    else if (oper == POW) {
-        res = pow(num_1, num_2);
+        *res = num_1 - num_2;
+    else if (oper == DIV) {
+        if (num_2) {
+          *res = num_1 / num_2;
+        } else {
+          status = INCORRECT_VAL;
+        }
     }
-    return res;
+    else if (oper == MULT)
+        *res = num_1 * num_2;
+    else if (oper == MOD) {
+      if (num_2) {
+        *res = fmod(num_1, num_2);
+      } else {
+        status = INCORRECT_VAL;
+      }
+    } else if (oper == POW) {
+        if (num_2 >= 0. && num_1 != 0) {
+          *res = pow(num_1, num_2);
+        } else {
+          status = INCORRECT_VAL;
+        }
+    }
+
+    return status;
 }
 
-double for_unary(node_t *stack, double num_1) {
+int for_unary(double * res, node_t *stack, double num_1) {
+    int status = SUCCESS;
     token_type oper = stack->token.type;
-    double res = 0.;
-    if (oper == SQRT) 
-        res = sqrt(num_1);
-    else if (oper == SIN) 
-        res = sin(num_1);
-    else if (oper == COS) 
-        res = cos(num_1);
-    else if (oper == TAN) 
-        res = tan(num_1);
-    else if (oper == ASIN) 
-      res = asin(num_1);
-    else if (oper == ACOS) 
-      res = acos(num_1);
-    else if (oper == ATAN) 
-      res = atan(num_1);
-    else if (oper == LN)  // natural logarithm
-        res = log(num_1);
-    else if (oper == LOG)  // natural logarithm
-      res = log10(num_1);
 
-    return res;
+    *res = 0.;
+    if (oper == SQRT) {
+      if (num_1 >= 0) {
+        *res = sqrt(num_1);
+      } else {
+        status = INCORRECT_VAL;
+      }
+    }
+    else if (oper == SIN) 
+        *res = sin(num_1);
+    else if (oper == COS) 
+        *res = cos(num_1);
+    else if (oper == TAN) 
+        *res = tan(num_1);
+    else if (oper == ASIN) {
+      if (fabs(num_1) > 1) {
+        *res = asin(num_1);
+      } else {
+        status = INCORRECT_VAL;
+      }
+    }
+    else if (oper == ACOS) {
+      if (fabs(num_1) > 1) {
+        *res = acos(num_1);
+      } else {
+        status = INCORRECT_VAL;
+      }
+    }
+    else if (oper == ATAN) 
+      *res = atan(num_1);
+    else if (oper == LN) { // natural logarithm
+      if (num_1 > 0) {
+        *res = log(num_1);
+      } else {
+        status = INCORRECT_VAL;
+      }
+    } 
+    else if (oper == LOG)  { // natural logarithm
+      if (num_1 > 0) {
+        *res = log10(num_1);
+      } else {
+        status = INCORRECT_VAL;
+      }
+    } 
+
+    return status;
 }
 
 // заполнение input_list лексемами из строки
@@ -377,7 +485,7 @@ node_t * add_elem (node_t * prev, double num, token_type type) {
 
 
 // проверка на корректность введенных скобок
-int checkBrackets(node_t *input_head) {
+int check_brackets(node_t *input_head) {
     int status = SUCCESS;
     node_t * buf = init_node();
     node_t * head = input_head;

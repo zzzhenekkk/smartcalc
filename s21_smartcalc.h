@@ -9,10 +9,14 @@
 #include <string.h>
 #include <unistd.h>
 
+#define GRAPH_X 3
 #define SUCCESS 1
 #define FAILURE 0
+#define INCORRECT_VAL -1
 
 
+#define GRAPH_ON 1
+#define GRAPH_OFF 0
 
 // typedef struct {
 //     union {
@@ -95,7 +99,7 @@ void printNode(node_t *head);
 int priority(node_t * cur);
 
 // проверка на корректность введенных скобок
-int checkBrackets(node_t *input_head);
+int check_brackets(node_t *input_head);
 
 // проверяет бинарный ли перед нами оператор, 1 - да
 int is_binary(node_t * cur);
@@ -108,9 +112,9 @@ int smart_calc(char * src, double * result);
 // перевод в польскую нотцию
 int polish_notattion(node_t * input_list, node_t ** output_list, node_t ** stack_list);
 
-double for_binary(node_t *stack, double num_1, double num_2);
+int for_binary(double * res, node_t *stack, double num_1, double num_2);
 
-double for_unary(node_t *stack, double num_1);
+int for_unary(double * res, node_t *stack, double num_1);
 
 void skip_space(char **src);
 
@@ -124,8 +128,9 @@ int find_func (node_t ** input_list, char ** src);
 int find_number (node_t ** input_list, char ** src);
 
 // подсчет выражения по полученной польской нотации
-double calculate(node_t * output_list, int * status);
+int calculate(node_t * output_list, double * result, double x, int graph);
 
-
+// отдельно считаем польскую нотацию из строки, и отдаем список c обртной пн
+int convert_polish_notation (node_t ** output_list, char * src);
 
 #endif  // S21_SMARTCALC
