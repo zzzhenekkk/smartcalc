@@ -377,6 +377,16 @@ START_TEST(test_29) {
 }
 END_TEST;
 
+START_TEST(test_30) {
+  char *src = "-(-1)";
+  double result = 0.;
+  int status = smart_calc(src, &result);
+  double expected = 1.;
+  ck_assert_double_eq_tol(result, expected, 1e-6);
+  ck_assert_int_eq(status, SUCCESS);
+  printf("\n");
+}
+END_TEST;
 
 
 TCase *tests_s21_int_to_smartcalc(void) {
@@ -410,5 +420,6 @@ TCase *tests_s21_int_to_smartcalc(void) {
   tcase_add_test(tcase, test_27);
   tcase_add_test(tcase, test_28);
   tcase_add_test(tcase, test_29);
+  tcase_add_test(tcase, test_30);
   return tcase;
 }
