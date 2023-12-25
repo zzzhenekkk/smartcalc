@@ -5,7 +5,7 @@ int smart_calc(char * src, double * result) {
   *result = 0.;
   node_t * output_list = NULL;
   status = convert_polish_notation (&output_list, src);
-  // printNode(output_list);
+  printNode(output_list);
 
   if (status == SUCCESS)
     status = calculate (output_list, result, 0., GRAPH_OFF);
@@ -20,7 +20,7 @@ int smart_calc(char * src, double * result) {
 // отдельно считаем польскую нотацию из строки, и отдаем список 
 int convert_polish_notation (node_t ** output_list, char * src) {
   int status = SUCCESS;
-  if (src) {
+  if (src && *src != '\0') {
     node_t * input_list = init_node();
     node_t * head_input = input_list;
     status = SUCCESS;
@@ -53,7 +53,7 @@ int convert_polish_notation (node_t ** output_list, char * src) {
 
 
     }
-  }
+  } else status = NOT_SRC;
     return status;
 }
 
@@ -71,7 +71,7 @@ int polish_notattion(node_t * input_list, node_t ** output_list) {
 
   node_t * stack_list = init_node();
 
-  while (input_list != NULL) {
+  while (input_list != NULL && status > 0) {
     
     // printNode(input_list);
     // printNode(*output_list);
@@ -80,23 +80,27 @@ int polish_notattion(node_t * input_list, node_t ** output_list) {
     // ситуация если закрывающая скобка
     if (input_list->token.type == CLOSE_BRACKET) {
       // проходимся в цикле, и выплевывем все из стека в output_list
-      while ((stack_list)->token.type != OPEN_BRACKET) {
-        *output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
+      while (status > 0 && (stack_list)->token.type != OPEN_BRACKET) {
+        if ((stack_list)->token.type == EMPTY) {status = FAILURE;}
+        else {*output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
         stack_list = del_elem (stack_list);
+        }
       }
-      stack_list = del_elem (stack_list); // удаляем открывающуюся скобку
+      if (status > 0) stack_list = del_elem (stack_list); // удаляем открывающуюся скобку
     }
 
     // если приоретет <= то выплевываем до открывающейся скобки, либо до начала
-    if ((priority(input_list) <= priority(stack_list)) && (priority(input_list) != 0) && (priority(input_list) != 5) && (input_list->token.type != UNARY_PLUS)) {
+    if (status > 0 && (priority(input_list) <= priority(stack_list)) && (priority(input_list) != 0) && (priority(input_list) != 5) && (input_list->token.type != UNARY_PLUS)) {
       // проходимся в цикле, и выплевывем все из стека в output_list
-      while ((stack_list)->token.type != OPEN_BRACKET && (stack_list)->token.type != EMPTY ) {
+      while (status > 0 && (stack_list)->token.type != OPEN_BRACKET && (stack_list)->token.type != EMPTY && priority(input_list)<=priority(stack_list)) {
         *output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
         stack_list = del_elem (stack_list);
       }
     }
 
+    if (status > 0) {
 
+    
     // распределяем из input в output или стек
     // если числа, то распределяем в output_list
     if (input_list->token.type == NUMBER || input_list->token.type == X_NUMBER) {
@@ -112,10 +116,11 @@ int polish_notattion(node_t * input_list, node_t ** output_list) {
           stack_list = add_elem (stack_list, input_list->token.num, input_list->token.type);
     }
     input_list = input_list->next;
+    }
   }
 
   // input_list закончился, нужно выплюнуть из стека все, что там есть
-  while ((stack_list)->token.type != EMPTY) {
+  while (status > 0 && (stack_list)->token.type != EMPTY) {
     *output_list = add_elem (*output_list, (stack_list)->token.num, (stack_list)->token.type);
     stack_list = del_elem (stack_list);
   }
@@ -135,7 +140,7 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
   double buf2 = 0.;
 
 
-  while (output_list != NULL && status == SUCCESS) {
+  while (output_list != NULL && status > 0) {
     if (output_list->token.type == EMPTY) output_list = output_list->next;
     // если число - кладем в стек
     if (output_list->token.type == NUMBER || output_list->token.type == X_NUMBER) {
@@ -151,16 +156,20 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
 
     }
     else if (output_list->token.type != EMPTY && priority(output_list) != 5){
-      if (!is_binary(output_list)) {
+      if (!is_binary(output_list) && stack && stack->token.type == NUMBER) {
         buf = stack->token.num;
         status = for_unary(&stack->token.num, output_list, buf);
       }
       else {
-        buf = stack->token.num;
+        if (stack && stack->prev && stack->prev->token.type == NUMBER && stack->token.type == NUMBER) {
+                  buf = stack->token.num;
         buf2 = stack->prev->token.num;
         stack = del_elem(stack);
         // if (buf2 == 0.) status = 
         status = for_binary(&stack->token.num, output_list, buf2, buf);
+        } 
+        else status = FAILURE;
+
       }
     }
     else {
@@ -196,6 +205,8 @@ int for_binary(double * res, node_t *stack, double num_1, double num_2) {
           *res = num_1 / num_2;
         } else {
           status = INCORRECT_VAL;
+          if (num_1) *res = INFINITY;
+          else *res = NAN;
         }
     }
     else if (oper == MULT)
@@ -236,14 +247,14 @@ int for_unary(double * res, node_t *stack, double num_1) {
     else if (oper == TAN) 
         *res = tan(num_1);
     else if (oper == ASIN) {
-      if (fabs(num_1) > 1) {
+      if (fabs(num_1) <= 1) {
         *res = asin(num_1);
       } else {
         status = INCORRECT_VAL;
       }
     }
     else if (oper == ACOS) {
-      if (fabs(num_1) > 1) {
+      if (fabs(num_1) <= 1) {
         *res = acos(num_1);
       } else {
         status = INCORRECT_VAL;
@@ -377,8 +388,8 @@ int find_func (node_t ** input_list, char ** src) {
         status = SUCCESS;
       }
 
-      length_number = strspn(*src, "pow");
-      if (length_number == 3) {
+      length_number = strspn(*src, "^");
+      if (length_number == 1) {
         *input_list = add_elem(*input_list, 0., POW);
         *src += length_number;
         length_number = 0;
@@ -463,37 +474,7 @@ node_t * add_elem (node_t * prev, double num, token_type type) {
 }
 
 
-// проверка на корректность введенных скобок
-int check_brackets(node_t *input_head) {
-    int status = SUCCESS;
-    node_t * buf = init_node();
-    node_t * head = input_head;
 
-    while (head != NULL && status) {
-
-        if (head->token.type == OPEN_BRACKET)
-            buf = add_elem(buf, 0., OPEN_BRACKET);
-        else if (head->token.type == CLOSE_BRACKET) {
-            if (buf != NULL)
-                buf = del_elem(buf);
-            else {
-                status = FAILURE;
-            }
-        }
-        head = head->next;
-    }
-
-    // if (input_head == NULL) {
-    //     status = FAILURE;
-    // }
-
-    if (buf->token.type != EMPTY) status = FAILURE;
-
-    // очистка buf
-    remove_node(buf);
-
-    return status;
-}
 
 // удалить элемент с конца списка, отдает ссылку на предыдущий элемент или null
 node_t * del_elem (node_t * cur) {
@@ -509,7 +490,7 @@ node_t * del_elem (node_t * cur) {
 // полностью очистить список с любого элемента
 void remove_node(node_t *cur) {
   // переходим в самый конец для очистки
-  while (cur->next) 
+  while (cur && cur->next) 
     cur = cur->next;
   while (cur != NULL) {
     struct node *prev = cur->prev;
@@ -524,10 +505,10 @@ void skip_space(char **src) {
 
 void printNode(node_t *head) {
     node_t *current = head;
-    char type [25][25] = {"EMPTY", "NUMBER", "X", "B+", "B-", "U-", "U+", "*", "/", "mod", "cos", "sin", "tan", "acos", "asin", "atan", "sqrt", "ln", "log", "pow", "(", ")"};
+    char type [25][25] = {"EMPTY", "NUMBER", "X", "+", "-", "U-", "U+", "*", "/", "mod", "cos", "sin", "tan", "acos", "asin", "atan", "sqrt", "ln", "log", "^", "(", ")"};
     while (current != NULL) {
         if (current->token.type == NUMBER)
-            printf(" %lf ", current->token.num);
+            printf(" %lg ", current->token.num);
         else
             printf(" %s ", type[current->token.type+1]);
         current = current->next;

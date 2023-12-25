@@ -13,24 +13,11 @@
 #define SUCCESS 1
 #define FAILURE 0
 #define INCORRECT_VAL -1
+#define NOT_SRC -2
 
 
 #define GRAPH_ON 1
 #define GRAPH_OFF 0
-
-// typedef struct {
-//     union {
-//         double value; // значение
-//     }
-//     int type; // какой тип
-
-//     // ссылка на след элемент
-    
-//     // ссылка на предыдущий элемент
-
-    
-// } Node;
-
 
 typedef enum { EMPTY = -1,
                NUMBER,
@@ -99,7 +86,7 @@ void printNode(node_t *head);
 int priority(node_t * cur);
 
 // проверка на корректность введенных скобок
-int check_brackets(node_t *input_head);
+// int check_brackets(node_t *input_head);
 
 // проверяет бинарный ли перед нами оператор, 1 - да
 int is_binary(node_t * cur);

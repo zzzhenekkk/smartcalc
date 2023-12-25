@@ -36,7 +36,7 @@ style:
 
 test: clean s21_covered
 	$(CC) test/$(TESTS)*.c $(TESTS).c -c $(FLAGS) --coverage
-	$(CC) -o $(TESTS) $(TESTS)*.o s21_calc.a -lcheck --coverage $(FLAGS) $(TEST_FLAGS) -lgcov
+	$(CC) -o $(TESTS) $(TESTS)*.o s21_calc.a -lcheck --coverage $(FLAGS) $(TEST_FLAGS)
 	./$(TESTS)
 
 mem: test
