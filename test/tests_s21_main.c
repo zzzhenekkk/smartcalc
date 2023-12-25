@@ -388,8 +388,19 @@ START_TEST(test_30) {
 }
 END_TEST;
 
+START_TEST(boobs_test) {
+  char *src = "(.)(.)";
+  double result = 0.;
+  int status = smart_calc(src, &result);
+  double expected = 0.;
+  ck_assert_double_eq_tol(result, expected, 1e-6);
+  ck_assert_int_eq(status, FAILURE);
+  printf("\n");
+}
+END_TEST;
 
-TCase *tests_s21_int_to_smartcalc(void) {
+
+TCase *tests_s21_main(void) {
   TCase *tcase = tcase_create(TCASE_NAME);
 
   tcase_add_test(tcase, test_1);
@@ -421,5 +432,6 @@ TCase *tests_s21_int_to_smartcalc(void) {
   tcase_add_test(tcase, test_28);
   tcase_add_test(tcase, test_29);
   tcase_add_test(tcase, test_30);
+  tcase_add_test(tcase, boobs_test);
   return tcase;
 }

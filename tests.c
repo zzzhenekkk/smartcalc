@@ -7,8 +7,8 @@ int main() {
   int counted_errors = 0;
 
   suite_add_tcase(suite, tcase);
-  suite_add_tcase(suite, tests_s21_int_to_smartcalc());
-  // suite_add_tcase(suite, tests_s21_smartcalc_to_int());
+  suite_add_tcase(suite, tests_s21_main());
+  suite_add_tcase(suite, tests_s21_invalid_val_math());
   // suite_add_tcase(suite, tests_s21_float_to_smartcalc());
   // suite_add_tcase(suite, tests_s21_smartcalc_to_float());
   // suite_add_tcase(suite, tests_s21_negate());

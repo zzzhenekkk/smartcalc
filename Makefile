@@ -1,7 +1,7 @@
 .PHONY: all calc
 
 CC=gcc
-FLAGS=-std=c11 -g -Wall -Werror -Wextra -fsanitize=address
+FLAGS=-std=c11 -g -Wall -Werror -Wextra #-fsanitize=address
 TEST_FLAGS=-lm
 S21_CALC_C=s21_*.c
 S21_CALC_H=s21_*.h
@@ -80,5 +80,5 @@ open: install
 	open $(APP)
 
 andrey: clean
-	$(CC) -g s21*.c andrey.c -o andrey_e
+	$(CC) -g s21*.c andrey.c -o andrey_e -lm
 	./andrey_e
