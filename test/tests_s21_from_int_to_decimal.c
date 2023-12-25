@@ -367,6 +367,17 @@ START_TEST(test_28) {
 }
 END_TEST;
 
+START_TEST(test_29) {
+  char *src = "123..123123 + 2";
+  double result = 0.;
+  int status = smart_calc(src, &result);
+  ck_assert_int_eq(status, FAILURE);
+
+  printf("\n");
+}
+END_TEST;
+
+
 
 TCase *tests_s21_int_to_smartcalc(void) {
   TCase *tcase = tcase_create(TCASE_NAME);
@@ -398,5 +409,6 @@ TCase *tests_s21_int_to_smartcalc(void) {
   tcase_add_test(tcase, test_26);
   tcase_add_test(tcase, test_27);
   tcase_add_test(tcase, test_28);
+  tcase_add_test(tcase, test_29);
   return tcase;
 }

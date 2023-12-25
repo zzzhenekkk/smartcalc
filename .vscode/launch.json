@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/user/Desktop/github/smartcalc",
-      "program": "/Users/user/Desktop/github/smartcalc/build/Debug/outDebug"
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/tests"
     }
   ]
 }

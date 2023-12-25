@@ -72,7 +72,7 @@ node_t * add_elem (node_t * prev, double num, token_type type);
 node_t * del_elem (node_t * cur);
 
 // заполнение входного списка лексемами из строки
-void input_input_list (node_t ** input_list, char ** src);
+int input_input_list (node_t ** input_list, char ** src);
 
 // полностью очистить список с любого элемента
 void remove_node(node_t *cur);
@@ -90,6 +90,9 @@ int priority(node_t * cur);
 
 // проверяет бинарный ли перед нами оператор, 1 - да
 int is_binary(node_t * cur);
+
+// ищет две точки в числе по длине len
+int two_doubles(char * str, int len);
 
 
 

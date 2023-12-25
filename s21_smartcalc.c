@@ -26,15 +26,12 @@ int convert_polish_notation (node_t ** output_list, char * src) {
     status = SUCCESS;
 
     // заполнение input_list лексемами из строки
-    input_input_list (&input_list, &src);
+    status = input_input_list (&input_list, &src);
     // печатаем все лексемы
     // printNode(head_input);
-    // printf("\n");
+    // printf("\n");;
 
-    //  проверяем на корректные скобки
-    // status = check_brackets(input_list);
-
-    if (status == SUCCESS) {
+    if (status > 0) {
       // выходной список, вначале для оп,ерандов а потом для операция
       *output_list = init_node();
 
@@ -56,12 +53,6 @@ int convert_polish_notation (node_t ** output_list, char * src) {
   } else status = NOT_SRC;
     return status;
 }
-
-  // int calc (node_t * head_output, double * result, double x) {
-  //   int status = SUCCESS;
-  //   result = calculate(head_output, &status);
-  //   return status;
-  // }
 
 
 
@@ -281,31 +272,49 @@ int for_unary(double * res, node_t *stack, double num_1) {
 }
 
 // заполнение input_list лексемами из строки
-void input_input_list (node_t ** input_list, char ** src) {
-  while (**src != '\0') {
-        find_number(input_list, src); // если точек > 1 : выдать ошбку
-        find_one_char(input_list, src); // если подряд знаки - тоже ошибка
-        find_func(input_list, src); //
-        skip_space(src);
+int input_input_list (node_t ** input_list, char ** src) {
+  int status = SUCCESS;
+  while (**src != '\0' && status > 0) {
+        status = find_number(input_list, src); // если точек > 1 : выдать ошбку
+        if (status == SUCCESS) find_one_char(input_list, src); // если подряд знаки - тоже ошибка
+        
+        if (status == SUCCESS) find_func(input_list, src); //
+        if (status == SUCCESS) skip_space(src);
         // printf("%s\n", *src);
         // sleep(1);
   }
+  return status;
 }
 
 // определение числа
 int find_number (node_t ** input_list, char ** src) {
-      int status = FAILURE;
+      int status = SUCCESS;
       int length_number = 0;
       length_number = strspn(*src, "1234567890.");
       double var = 0;
 
-      if (length_number) {
-        sscanf(*src, "%lf", &var);
-        *input_list = add_elem(*input_list, var, NUMBER);
-        status = SUCCESS;
+
+      if (length_number) { 
+        // если две точки в числе то ошибка
+        if (two_doubles(*src, length_number)) status = FAILURE;
+        else {
+          sscanf(*src, "%lf", &var);
+          *input_list = add_elem(*input_list, var, NUMBER);
+          status = SUCCESS;
+        }
       }
+
       *src += length_number;
       return status;
+}
+
+// ищет две точки в числе по длине len
+int two_doubles(char * str, int len) {
+  int result = 0;
+  for (int i = 0; len > 0; len--, i++) {
+    if (str[i] == '.') result++;
+  }
+  return result >= 2 ? 1 : 0;
 }
 
 // определение функции из 2-4 символов
