@@ -45,11 +45,10 @@ int convert_polish_notation (node_t ** output_list, char * src) {
 
       *output_list = head_output;
 
-      // зачищаем стек
+    }
+    // зачищаем стек
       remove_node(input_list);
 
-
-    }
   } else status = NOT_SRC;
     return status;
 }
@@ -170,6 +169,9 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
   }
   
   *result = stack->token.num;
+  // проверка, что в стеке лежит только 1 значение - наш ответ, и одновременно не менять ошибку на failure, если какая-то другая ошибка случилась раньше
+  if (stack->prev && stack->prev->token.type != EMPTY && status == SUCCESS)
+    status = FAILURE;
   remove_node(stack);
   return status;
 }
@@ -209,10 +211,10 @@ int for_binary(double * res, node_t *stack, double num_1, double num_2) {
         status = INCORRECT_VAL;
       }
     } else if (oper == POW) {
-        if (num_2 >= 0. && num_1 != 0) {
-          *res = pow(num_1, num_2);
-        } else {
+        if (num_2 < 0. && num_1 == 0) {
           status = INCORRECT_VAL;
+        } else {
+          *res = pow(num_1, num_2);
         }
     }
 

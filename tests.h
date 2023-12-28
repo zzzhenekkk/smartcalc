@@ -9,8 +9,8 @@
 #define SUITE_NAME "Unit"
 #define TCASE_NAME "Tests"
 
-TCase *tests_s21_int_to_smartcalc(void);
-// TCase *tests_s21_smartcalc_to_int(void);
+TCase *tests_s21_main(void);
+TCase *tests_s21_invalid_val_math(void);
 // TCase *tests_s21_float_to_smartcalc(void);
 // TCase *tests_s21_smartcalc_to_float(void);
 // TCase *tests_s21_negate(void);

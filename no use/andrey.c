@@ -3,7 +3,7 @@
 int main() {
   int status = SUCCESS;
   double result = 0.;
-  char str[200] = "log(45.236582*55522.85-583)";
+  char str[200] = "(.)(.+34)";
   status = smart_calc(str, &result);
   printf("\n%d %lf", status, result);
   

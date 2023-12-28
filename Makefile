@@ -1,3 +1,4 @@
+.PHONY: all calc
 SHELL = /bin/sh
 FLAGS=-std=c11 -Wextra -Wall -Werror
 C_SOURCES=$(wildcard s21_*.c)
@@ -5,6 +6,12 @@ LCHECK=-lcheck -lsubunit -lm
 GCOV=-fprofile-arcs -ftest-coverage
 TARGET = Calculator_v1.0
 OUTNAME = smart_calc_qt
+CC=gcc
+FLAGS=-std=c11 -g -Wall -Werror -Wextra #-fsanitize=address
+TEST_FLAGS=-lm
+S21_CALC_C=s21_*.c
+S21_CALC_H=s21_*.h
+S21_CALC_O=s21_*.o
 TESTS=tests
 OS := $(shell uname -s)
 OS_TITLE=:=$(shell cat /etc/os-release)
@@ -72,5 +79,14 @@ check:
 	@rm -f vtest
 	@cat -n valgrind.out | grep ERROR
 
+
 clean:
 	rm -rf *.o  a.out TESTS lexeme_parser *.gcda *.gcno coverage.info coverage_html doxygen valgrind.out build*
+
+open: install
+	open $(APP)
+
+andrey: clean
+	$(CC) -g s21*.c andrey.c -o andrey_e -lm
+	./andrey_e
+
