@@ -42,6 +42,7 @@ install:
 uninstall:
 	@rm -rf ../build/*
 	echo "Uninstall completed!"
+	
 dvi: clean
 	@doxygen Doxyfile
 	open doxygen/html/index.html
@@ -66,12 +67,10 @@ test: clean s21_covered
 	$(CC) -o $(TESTS) $(TESTS)*.o s21_calc.a -lcheck --coverage $(FLAGS) $(TEST_FLAGS)
 	./$(TESTS)
 
-gcov_report:
-	gcc $(FLAGS) unit_tests.c $(C_SOURCES) -o test $(LCHECK) $(GCOV)
-	./test
-	lcov --capture --directory . --output-file coverage.info
-	genhtml coverage.info -o coverage_html
-	open coverage_html/index.html
+gcov_report: test
+	lcov -t "s21_smartcalc" -o s21_smartcalc.info -c -d .
+	genhtml -o report s21_smartcalc.info
+	open report/index.html
 
 check: 
 	@gcc $(FLAGS) $(C_SOURCES) unit_tests.c -g $(LCHECK) -o vtest
@@ -81,7 +80,7 @@ check:
 
 
 clean:
-	rm -rf *.o  a.out TESTS lexeme_parser *.gcda *.gcno coverage.info coverage_html doxygen valgrind.out build*
+	rm -rf *.o report a.out $(TESTS) lexeme_parser *.gcda *.gcno coverage.info coverage_html doxygen valgrind.out build*
 
 open: install
 	open $(APP)

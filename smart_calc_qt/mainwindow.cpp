@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_sqrt, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->pushButton_pow, SIGNAL(clicked()), this, SLOT(digits_numbers()));
 
+    connect(ui->pushButton_x, SIGNAL(clicked()), this, SLOT(digits_numbers()));
+
 }
 
 MainWindow::~MainWindow()
@@ -74,8 +76,10 @@ void MainWindow::on_pushButton_ac_clicked()
 void MainWindow::on_pushButton_eq_clicked()
 {
     QString input = ui->result_show->text();
-    double result;
-    int error = smart_calc( (char*)input.toStdString().c_str(), &result);
+    double result = 0.;
+    int error = SUCCESS;
+
+    error = smart_calc( (char*)input.toStdString().c_str(), &result);
 
     if (std::isnan(result) || error <= 0) {
       ui->result_show->setText("ERROR");
@@ -85,9 +89,43 @@ void MainWindow::on_pushButton_eq_clicked()
 }
 
 
+void MainWindow::on_pushButton_set_x_clicked()
+{
+    ui->x_g->setText(ui->result_show->text());
+    ui->pushButton_set_x->setChecked(true);
+}
+
+
+void MainWindow::on_pushButton_clear_x_clicked()
+{
+    ui->x_g->setText("0");
+}
 
 
 
+void MainWindow::on_pushButton_calc_x_clicked()
+{
+    QString input = ui->result_show->text();
+    double result = 0.;
+    int status = SUCCESS;
+    result = 0.;
+    node_t * output_list = NULL;
+    status = convert_polish_notation (&output_list, (char*)input.toStdString().c_str());
+    if (status == SUCCESS)
+      status = calculate (output_list, &result, ui->x_g->text().toDouble(), GRAPH_ON);
+
+        //
+    remove_node(output_list);
+    if (status <= 0) {
+         ui->result_show->setText("ERROR");
+    }
+
+    if (std::isnan(result) || status <= 0) {
+      ui->result_show->setText("ERROR");
+    } else {
+      ui->result_show->setText(QString::number(result, 'g', 7));
+    }
+}
 
 
 
@@ -139,6 +177,8 @@ void MainWindow::on_pushButton_eq_clicked()
 
 
 //}
+
+
 
 
 

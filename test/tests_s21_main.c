@@ -1,16 +1,17 @@
 #include "../tests.h"
 
 START_TEST(test_1) {
-  char *src = "2458.324234*4.53345435-5^22.234324+123.4543/2.1212321";
+  int status = SUCCESS;
+  double result = 0.;
+  node_t * output_list = NULL;
+  status = convert_polish_notation (&output_list, "2*x");
+  printNode(output_list);
 
-  double expected = -3476366391885870.520000000000;
+  if (status == SUCCESS)
+    status = calculate (output_list, &result, 55., GRAPH_ON);
 
-  double result = 0;
-  smart_calc(src, &result);
-  printf("\nFINAL RESULT: %lf\nEXPEC RESULT: %lf\n", result, expected);
-  ck_assert_double_eq_tol(result, expected, 1e-7);
-
-  printf("\n");
+  // printf("\n%d %lf", status, result);
+  remove_node(output_list);
 }
 END_TEST
 

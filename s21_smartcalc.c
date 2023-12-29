@@ -135,7 +135,11 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
     // если число - кладем в стек
     if (output_list->token.type == NUMBER || output_list->token.type == X_NUMBER) {
       if (graph) {
-        stack = add_elem (stack, x, output_list->token.type);
+        if (output_list->token.type == X_NUMBER) {
+          stack = add_elem (stack, x, output_list->token.type);
+        } else {
+          stack = add_elem (stack, output_list->token.num, output_list->token.type);
+        }
       } else {
         if (output_list->token.type == X_NUMBER) {
           status = GRAPH_X;
