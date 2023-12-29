@@ -33,20 +33,16 @@ all: install
 run:
 	../build/Calculator_v1.0.app
 
-install:
+install:       
 	echo "Installation of $(TARGET).app:"
 	mkdir -p ../build
-	cd smart_calc_qt/ && qmake && make && make clean && rm -f Makefile && mv $(OUTNAME) ../../build/$(TARGET).app && cd ..
+	cd smart_calc_qt/ && qmake && make && make clean && rm -rf Makefile && mv calculator.app ../../build/$(TARGET).app
 	echo "Installation completed! You can find app in the ../build/ folder!"
-	
+
 uninstall:
-	@rm -rf ../build/*
+	rm -rf ../build
 	echo "Uninstall completed!"
 	
-dvi: clean
-	@doxygen Doxyfile
-	open doxygen/html/index.html
-
 dist: install
 	mkdir -p ../dist
 	@cp -R ../build/$(TARGET).app ../dist
@@ -54,9 +50,12 @@ dist: install
 	@cd ../dist && tar cvzf $(TARGET).tgz *
 	@cd ../dist && rm -rf $(TARGET).app
 	@rm -rf ../dist/src
-	echo "Archive creation completed successfully!"
-	
+	echo "Archive creation completed successfully!"	
 
+dvi: clean
+	@doxygen Doxyfile
+	open doxygen/html/index.html
+	
 s21_covered:
 	$(CC) s21_*.c -c $(FLAGS) --coverage
 	ar rc s21_calc.a s21_*.o
@@ -80,12 +79,8 @@ check:
 
 
 clean:
-	rm -rf *.o report a.out $(TESTS) lexeme_parser *.gcda *.gcno coverage.info coverage_html doxygen valgrind.out build*
+	rm -rf *.o *.info *.a report a.out $(TESTS) lexeme_parser *.gcda *.gcno coverage.info coverage_html doxygen valgrind.out build*
 
 open: install
 	open $(APP)
-
-andrey: clean
-	$(CC) -g s21*.c andrey.c -o andrey_e -lm
-	./andrey_e
 
