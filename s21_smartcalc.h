@@ -9,11 +9,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#define GRAPH_X 3
+
 #define SUCCESS 1
 #define FAILURE 0
 #define INCORRECT_VAL -1
 #define NOT_SRC -2
+#define GRAPH_X -3
 
 
 #define GRAPH_ON 1

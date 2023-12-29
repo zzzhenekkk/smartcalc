@@ -92,7 +92,6 @@ void MainWindow::on_pushButton_eq_clicked()
 void MainWindow::on_pushButton_set_x_clicked()
 {
     ui->x_g->setText(ui->result_show->text());
-    ui->pushButton_set_x->setChecked(true);
 }
 
 
@@ -116,9 +115,6 @@ void MainWindow::on_pushButton_calc_x_clicked()
 
         //
     remove_node(output_list);
-    if (status <= 0) {
-         ui->result_show->setText("ERROR");
-    }
 
     if (std::isnan(result) || status <= 0) {
       ui->result_show->setText("ERROR");

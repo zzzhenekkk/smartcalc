@@ -7,7 +7,7 @@
       "request": "launch",
       "args": [],
       "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/tests"
+      "program": "${workspaceFolder}/andrey_e"
     }
   ]
 }

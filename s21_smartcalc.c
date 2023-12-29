@@ -134,22 +134,15 @@ int calculate(node_t * output_list, double * result, double x, int graph) {
     if (output_list->token.type == EMPTY) output_list = output_list->next;
     // если число - кладем в стек
     if (output_list->token.type == NUMBER || output_list->token.type == X_NUMBER) {
-      if (graph) {
         if (output_list->token.type == X_NUMBER) {
-          stack = add_elem (stack, x, output_list->token.type);
-        } else {
-          stack = add_elem (stack, output_list->token.num, output_list->token.type);
-        }
-      } else {
-        if (output_list->token.type == X_NUMBER) {
-          status = GRAPH_X;
-          break;
+          output_list->token.num = x;
+          output_list->token.type = NUMBER;
+          if (graph == GRAPH_OFF) status = GRAPH_X;
         }
         stack = add_elem (stack, output_list->token.num, output_list->token.type);
-      }
 
     }
-    else if (output_list->token.type != EMPTY && priority(output_list) != 5){
+    else if (output_list->token.type != EMPTY && priority(output_list) != 5 && status > 0){
       if (!is_binary(output_list) && stack && stack->token.type == NUMBER) {
         buf = stack->token.num;
         status = for_unary(&stack->token.num, output_list, buf);
