@@ -4,6 +4,13 @@
 
 #include "../s21_smartcalc.h"
 
+/**
+ * @brief Конструктор класса MainWindow.
+ *
+ * Конструктор инициализирует интерфейс пользователя и устанавливает необходимые соединения между сигналами и слотами.
+ *
+ * @param parent Указатель на родительский виджет.
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -44,13 +51,22 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
+/**
+ * @brief Деструктор класса MainWindow.
+ *
+ * Деструктор освобождает ресурсы, выделенные для интерфейса пользователя.
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
 
-// добавляем в строку из кнопки, без логики
+/**
+ * @brief Добавляет число или символ к текущему результату.
+ *
+ * Эта функция вызывается, когда пользователь нажимает кнопку с числовым значением или оператором. Она добавляет текст кнопки к текущему результату.
+ */
 void MainWindow::digits_numbers()
 {
     QPushButton * button = (QPushButton *)sender();
@@ -65,14 +81,22 @@ void MainWindow::digits_numbers()
 }
 
 
-// для ac
+/**
+ * @brief Очищает поле результата.
+ *
+ * Эта функция вызывается, когда пользователь нажимает кнопку "AC". Она обнуляет поле результата.
+ */
 void MainWindow::on_pushButton_ac_clicked()
 {
 
     ui->result_show->setText("0");
 }
 
-// для подсчета
+/**
+ * @brief Выполняет расчет.
+ *
+ * Эта функция вызывается, когда пользователь нажимает кнопку "=". Она преобразует введенную пользователем строку в число и выводит результат расчета.
+ */
 void MainWindow::on_pushButton_eq_clicked()
 {
     QString input = ui->result_show->text();
@@ -88,20 +112,32 @@ void MainWindow::on_pushButton_eq_clicked()
     }
 }
 
-
+/**
+ * @brief Устанавливает значение x.
+ *
+ * Эта функция вызывается, когда пользователь нажимает кнопку "Set x". Она устанавливает значение x равным текущему результату.
+ */
 void MainWindow::on_pushButton_set_x_clicked()
 {
     ui->x_g->setText(ui->result_show->text());
 }
 
-
+/**
+ * @brief Очищает значение x.
+ *
+ * Эта функция вызывается, когда пользователь нажимает кнопку "Clear x". Она обнуляет значение x.
+ */
 void MainWindow::on_pushButton_clear_x_clicked()
 {
     ui->x_g->setText("0");
 }
 
 
-
+/**
+ * @brief Выполняет расчет с использованием значения x.
+ *
+ * Эта функция вызывается, когда пользователь нажимает кнопку "Calc x". Она преобразует введенную пользователем строку```
+*/
 void MainWindow::on_pushButton_calc_x_clicked()
 {
     QString input = ui->result_show->text();
@@ -123,16 +159,13 @@ void MainWindow::on_pushButton_calc_x_clicked()
     }
 }
 
-
+/**
+*@brief Генерирует и отображает график.
+*Эта функция вызывается, когда пользователь нажимает кнопку "Graph". Она генерирует данные для графика, устанавливает параметры графика и отображает его. 
+*/
 void MainWindow::on_pushButton_graph_clicked()
 {
-    //Рисуем график y=x*x
     //Сгенерируем данные
-    //Для этого создадим два массива точек:
-    //один для сохранения x координат точек,
-    //а второй для y соответственно
-//    double a = -1; //Начало интервала, где рисуем график по оси Ox
-//    double b =  1; //Конец интервала, где рисуем график по оси Ox
     // получаем максимальные и минимальные значения осей
     double x_min = ui->doubleSpinBox_x_min->value();
     double x_max = ui->doubleSpinBox_x_max->value();
@@ -154,9 +187,6 @@ void MainWindow::on_pushButton_graph_clicked()
     //Пробегаем по всем точкам
     if (status > 0) {
         for (double X = x_min; X <= x_max; X += h) {
-//            if (X == 0.0) {
-//                continue;
-//            }
           x[i] = X;
 
           output_list = header_output_list;
@@ -218,71 +248,6 @@ void MainWindow::on_pushButton_graph_clicked()
     //И перерисуем график на нашем widget
     ui->widget->replot();
 }
-
-
-
-//    // шаг
-//    double h = 0.1;
-//    QVector<double> x, y;  // Массивы координат точек
-
-//    // собираем все точки
-//    for (double X = x_min; X <= x_max; X += h) {
-//      x.push_back(X);
-//      y.push_back(
-//          calculate_points(result_text.toLower().toStdString().c_str(), X));
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//void MainWindow::on_pushButton_dot_clicked()
-//{
-////    if (!(ui->result_show->text().contains('.')))
-//    ui->result_show->setText(ui->result_show->text() + ".");
-//}
-
-//connect(ui->pushButton_dot, SIGNAL(clicked()), this, SLOT(digits_numbers()));
-//connect(ui->pushButton_sin, SIGNAL(clicked()), this, SLOT(digits_numbers()));
-//connect(ui->pushButton_cos, SIGNAL(clicked()), this, SLOT(digits_numbers()));
-//connect(ui->pushButton_asin, SIGNAL(clicked()), this, SLOT(digits_numbers()));
-//connect(ui->pushButton_acos, SIGNAL(clicked()), this, SLOT(digits_numbers()));
-//connect(ui->pushButton_tan, SIGNAL(clicked()), this, SLOT(digits_numbers()));
-
-
-//ui->result_show->text() + button->text()
-//void MainWindow::on_pushButton_clicked()
-//{   // для labek по нажатию кнопки меняется текст
-////    ui->label->setText("Кнопка нажата!");
-////    // открывается диалоговое окно типа about
-////    QMessageBox::about(this, "Заголовок", "Здесь текст, который нужно отобразить");
-////    // открывается диалоговое окно типа ОШИБКА
-////    QMessageBox::critical(this, "Заголовок", "ОШИБКАААА");
-////    // открывается диалоговое окно типа информация там другая картинка
-////    QMessageBox::information(this, "Заголовок", "Информация");
-////    // открывается диалоговое окно типа предупреждение там другая картинка
-////    QMessageBox::warning(this, "Заголовок", "Информация");
-//    // открывается диалоговое окно типа вопрос там другая картинка
-////    QMessageBox::StandardButton reply = QMessageBox::question(this, "Заголовок", "Информация", QMessageBox::Yes | QMessageBox::No);
-////    if (reply == QMessageBox::Yes) {
-////        QApplication::quit();
-////    } else {
-////        qDebug() << "Кнопка нет, была нажата";
-////    }
-
-
-//}
-
-
 
 
 
