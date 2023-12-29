@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
-    <height>474</height>
+    <width>579</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -716,7 +716,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>20</y>
+      <y>10</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -767,7 +767,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>470</x>
-      <y>20</y>
+      <y>10</y>
       <width>51</width>
       <height>31</height>
      </rect>
@@ -791,7 +791,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>20</y>
+      <y>10</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -814,7 +814,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>20</y>
+      <y>10</y>
       <width>51</width>
       <height>31</height>
      </rect>
@@ -836,10 +836,10 @@ QPushButton:pressed {
    <widget class="QPushButton" name="pushButton_graph">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>330</y>
-      <width>41</width>
-      <height>31</height>
+      <x>320</x>
+      <y>90</y>
+      <width>191</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -860,7 +860,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>20</y>
+      <y>10</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -883,7 +883,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>20</y>
+      <y>10</y>
       <width>21</width>
       <height>31</height>
      </rect>
@@ -892,8 +892,137 @@ QPushButton:pressed {
      <string>X=</string>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>120</y>
+      <width>251</width>
+      <height>241</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>52</y>
+      <width>251</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_x_min">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <double>-1000000.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>-10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_x_max">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <double>-1000000.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_y_min">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <double>-1000000.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>-10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_y_max">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <double>-1000000.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QDoubleSpinBox" name="doubleSpinBox_h">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>90</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="minimum">
+     <double>-1000000.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>1000000.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

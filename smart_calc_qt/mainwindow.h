@@ -43,6 +43,8 @@ private slots:
 
       void on_pushButton_calc_x_clicked();
 
+      void on_pushButton_graph_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
