@@ -13,6 +13,9 @@ int smart_calc(char * src, double * result) {
   int status = SUCCESS;
   *result = 0.;
   node_t * output_list = NULL;
+  // char src_copy[1000];
+  // strcpy(src_copy,src);
+  // status = convert_polish_notation (&output_list, src_copy);
   status = convert_polish_notation (&output_list, src);
   // printNode(output_list);
 

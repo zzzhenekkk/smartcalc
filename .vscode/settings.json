@@ -61,5 +61,9 @@
     "bit": "c",
     "__locale": "c",
     "ios": "c"
-  }
+  },
+  "lldb.displayFormat": "auto",
+  "lldb.showDisassembly": "auto",
+  "lldb.dereferencePointers": true,
+  "lldb.consoleMode": "commands"
 }
