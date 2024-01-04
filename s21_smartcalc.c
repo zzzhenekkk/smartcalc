@@ -371,8 +371,9 @@ int input_input_list (node_t ** input_list, char ** src) {
  */
 int find_number (node_t ** input_list, char ** src) {
       int status = SUCCESS;
-      int length_number = 0;
+      int length_number = 0, length_pi_e = 0;
       length_number = strspn(*src, "1234567890.");
+      length_pi_e = strspn(*src, "e𝝅");
       double var = 0;
 
 
@@ -386,7 +387,18 @@ int find_number (node_t ** input_list, char ** src) {
         }
       }
 
-      *src += length_number;
+      if (length_pi_e) { 
+        status = SUCCESS;
+        if (**src == 'e' && length_pi_e == 1)
+          *input_list = add_elem(*input_list, EXP, NUMBER);
+        else if (length_pi_e == 4 && **src != 'e')
+          *input_list = add_elem(*input_list, PI, NUMBER);
+        else
+          status = FAILURE;
+      }
+      
+
+      *src += length_number + length_pi_e;
       return status;
 }
 

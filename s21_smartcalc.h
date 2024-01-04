@@ -16,6 +16,8 @@
 #define NOT_SRC -2
 #define GRAPH_X -3
 
+#define EXP 2.718281828459045
+#define PI 3.141592653589793
 
 #define GRAPH_ON 1
 #define GRAPH_OFF 0
