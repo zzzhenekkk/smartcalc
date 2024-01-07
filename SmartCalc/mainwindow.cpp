@@ -53,10 +53,12 @@ void MainWindow::convert_buttons()
 {
     QPushButton * button = (QPushButton *)sender();
 
-    if (ui->result->text() == "0" && button->text() != ",") {
-        ui->result->clear();
+    // if (ui->result->text() == "0" && button->text() != ",") {
+    //     ui->result->clear();
+    // }
+    if (ui->result->text() == "0" && strchr("^/*,", *button->text().toStdString().c_str()) == 0 && button->text() != "mod") {
+           ui->result->clear();
     }
-
     ui->result->setText(ui->result->text() + ((button->text() == ",") ? "." : button->text()));
 }
 
@@ -74,13 +76,36 @@ void MainWindow::on_pushButton_equal_clicked()
     double result = 0.;
     int error = SUCCESS;
 
-    error = smart_calc( (char*)input.toStdString().c_str(), &result);
-
-    if (std::isnan(result) || error !=SUCCESS) {
-        ui->result->setText("ERROR");
-    } else {
-        ui->result->setText(QString::number(result, 'g', 7));
+    if (input.contains('x')) {
+        node_t * output_list = NULL;
+        error = convert_polish_notation (&output_list, (char*)input.toStdString().c_str());
+        if (error == SUCCESS) {
+            QString x_val = ui->x_value->text();
+            double x = x_val.toDouble();
+            if (x == 0 && x_val != "0") {
+                if (x_val.length() == 1) // попали в exp
+                    x = EXP;
+                else // остается только pi
+                    x = PI;
+            }
+            error = calculate(output_list, &result, x, GRAPH_ON);
+            if (error == SUCCESS)
+                ui->result->setText(QString::number(result));
+        }
+        remove_node(output_list);
+        if (error != SUCCESS)
+            ui->result->setText("ERROR");
     }
+    else {
+        error = smart_calc( (char*)input.toStdString().c_str(), &result);
+
+        if (std::isnan(result) || error !=SUCCESS) {
+            ui->result->setText("ERROR");
+        } else {
+            ui->result->setText(QString::number(result, 'g', 7));
+        }
+    }
+
 }
 
 
@@ -173,4 +198,33 @@ void MainWindow::on_pushButton_plot_clicked()
     //И перерисуем график на нашем widget
     ui->widget->replot();
 }
+
+void MainWindow::on_pushButton_clear_plot_clicked()
+{
+    // ставим по умолчанию значения осей
+    ui->doubleSpinBox_x_min->setValue(-10.0);
+    ui->doubleSpinBox_x_max->setValue(10.0);
+    ui->doubleSpinBox_y_min->setValue(-10.0);
+    ui->doubleSpinBox_y_max->setValue(10.0);
+
+    ui->widget->clearGraphs();
+    ui->widget->replot();
+}
+
+void MainWindow::on_Set_X_clicked()
+{
+    if (strspn(ui->result->text().toStdString().c_str(), "1234567890.e𝝅") > 0) {
+        ui->x_value->setText(ui->result->text());
+        ui->result->setText("0");
+    }
+    else
+        ui->result->setText("ERROR");
+}
+
+
+void MainWindow::on_Clear_X_clicked()
+{
+    ui->x_value->setText("0");
+}
+
 

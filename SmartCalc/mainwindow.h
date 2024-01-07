@@ -41,6 +41,12 @@ private slots:
 
     void on_pushButton_plot_clicked();
 
+    void on_Set_X_clicked();
+
+    void on_Clear_X_clicked();
+
+    void on_pushButton_clear_plot_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
