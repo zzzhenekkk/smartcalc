@@ -9,17 +9,8 @@ int main() {
   suite_add_tcase(suite, tcase);
   suite_add_tcase(suite, tests_s21_main());
   suite_add_tcase(suite, tests_s21_invalid_val_math());
-  // suite_add_tcase(suite, tests_s21_float_to_smartcalc());
-  // suite_add_tcase(suite, tests_s21_smartcalc_to_float());
-  // suite_add_tcase(suite, tests_s21_negate());
-  // suite_add_tcase(suite, tests_s21_add());
-  // suite_add_tcase(suite, tests_s21_sub());
-  // suite_add_tcase(suite, tests_s21_mul());
-  // suite_add_tcase(suite, tests_s21_div());
-  // suite_add_tcase(suite, tests_s21_truncate());
-  // suite_add_tcase(suite, tests_s21_floor());
-  // suite_add_tcase(suite, tests_s21_round());
-  // suite_add_tcase(suite, tests_s21_comparison());
+  suite_add_tcase(suite, tests_s21_credit_annuitet());
+  // suite_add_tcase(suite, tests_s21_credit_diff());
 
   srunner_set_fork_status(srunner, CK_NOFORK);
   srunner_run_all(srunner, CK_VERBOSE);

@@ -132,7 +132,7 @@ int convert_polish_notation (node_t ** output_list, char * src);
 /************************************* ФУНКЦИИ ДЛЯ КРЕДИТА **************************************************/
 
 // общая функция для расчета кредита (выдает 3 значения)
-void calulate_cradit(int type, double sum_credit, double percent, int period, int number, double *payment, double *extra, double *total);
+void calulate_credit(int type, double sum_credit, double percent, int period, int number, double *payment, double *extra, double *total);
 
 // считает ежемесячную выплату по аннуитету
 double annuitet(double sum_credit, double percent, int period);
@@ -142,5 +142,8 @@ double diff_total(double sum_credit, double percent, int period);
 
 // считате выплату в определенный месяц для дифференцированного кредита
 double diff_payment(double sum_credit, double percent, int period, int number);
+
+// округление до второго знака (копейки)
+double my_round2(double x);
 
 #endif  // S21_SMARTCALC
