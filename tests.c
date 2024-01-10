@@ -10,7 +10,7 @@ int main() {
   suite_add_tcase(suite, tests_s21_main());
   suite_add_tcase(suite, tests_s21_invalid_val_math());
   suite_add_tcase(suite, tests_s21_credit_annuitet());
-  // suite_add_tcase(suite, tests_s21_credit_diff());
+  suite_add_tcase(suite, tests_s21_credit_diff());
 
   srunner_set_fork_status(srunner, CK_NOFORK);
   srunner_run_all(srunner, CK_VERBOSE);

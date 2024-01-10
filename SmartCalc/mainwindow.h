@@ -9,7 +9,8 @@
 extern "C" {
 #endif
 
-#include "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.h"
+// #include "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.h"
+#include "s21_smartcalc.h"
 
 #ifdef __cplusplus
 }

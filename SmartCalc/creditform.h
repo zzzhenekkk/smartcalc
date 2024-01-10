@@ -3,6 +3,17 @@
 
 #include <QWidget>
 
+#ifdef __cplusplus
+
+extern "C" {
+#endif
+
+#include "s21_smartcalc.h"
+
+#ifdef __cplusplus
+}
+#endif
+
 namespace Ui {
 class CreditForm;
 }
@@ -18,7 +29,6 @@ public:
 private slots:
 
     void on_pushButton_call_main_window_clicked();
-
 
     void on_pushButton_clear_clicked();
 

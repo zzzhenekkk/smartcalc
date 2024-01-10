@@ -2,6 +2,7 @@
 
 // общая функция для расчета кредита (выдает 3 значения)
 void calulate_credit(int type, double sum_credit, double percent, int period, int number, double *payment, double *extra, double *total) {
+    percent /= 12; // так как во всех банках указывают именно годовую ставку
     if (type == ANNUITET) {
         *payment = annuitet(sum_credit, percent, period);
         *total = (*payment) * period;
@@ -16,7 +17,6 @@ void calulate_credit(int type, double sum_credit, double percent, int period, in
 
 // считает ежемесячную выплату по аннуитету
 double annuitet(double sum_credit, double percent, int period) {
-    percent /= 12; // так как во всех банках указывают именно годовую ставку
     double coeff = (100 + percent) / 100;
     double x = sum_credit;
     if (percent > 0)
@@ -29,7 +29,6 @@ double annuitet(double sum_credit, double percent, int period) {
 
 // считате общую сумму выплат дифференцированного кредита
 double diff_total(double sum_credit, double percent, int period) {
-    percent /= 12; // так как во всех банках указывают именно годовую ставку
     double coeff = percent / 100;
     double x = sum_credit;
     x += coeff * sum_credit * (period + 1) / 2;
@@ -39,7 +38,6 @@ double diff_total(double sum_credit, double percent, int period) {
 
 // считате выплату в определенный месяц для дифференцированного кредита
 double diff_payment(double sum_credit, double percent, int period, int number) {
-    percent /= 12; // так как во всех банках указывают именно годовую ставку
     double coeff = percent / 100;
     return my_round2(coeff * sum_credit * (period - (number - 1)) / period + sum_credit / period);
 }

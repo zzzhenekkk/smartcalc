@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.h"
+// #include "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.h"
+#include "s21_smartcalc.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

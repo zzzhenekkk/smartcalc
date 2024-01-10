@@ -13,15 +13,19 @@ CONFIG += c++17
 SOURCES += \
     creditform.cpp \
     main.cpp \
-    mainwindow.cpp \
-    "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.c" \
-    qcustomplot.cpp
+    mainwindow.cpp \ 
+    qcustomplot.cpp \
+    s21_credit_calc.c \
+    s21_smartcalc.c \
+    # "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_credit_calc.c" \
+    # "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.c"
 
 HEADERS += \
-    "C:/Users/Андрей/Desktop/школа 21/base/smartcalc/s21_smartcalc.h" \
     creditform.h \
     mainwindow.h \
-    qcustomplot.h
+    qcustomplot.h \
+    s21_smartcalc.h \
+    # "C:/Users/Андрей/Desktop/школа 21/base/smartcalc/s21_smartcalc.h" \
 
 FORMS += \
     creditform.ui \
