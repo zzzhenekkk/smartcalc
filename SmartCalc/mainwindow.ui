@@ -1285,8 +1285,8 @@
      <rect>
       <x>569</x>
       <y>89</y>
-      <width>351</width>
-      <height>321</height>
+      <width>361</width>
+      <height>331</height>
      </rect>
     </property>
    </widget>
@@ -1480,7 +1480,7 @@
      <rect>
       <x>362</x>
       <y>10</y>
-      <width>81</width>
+      <width>101</width>
       <height>50</height>
      </rect>
     </property>
@@ -1488,6 +1488,9 @@
      <font>
       <pointsize>15</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 180, 180);</string>
     </property>
     <property name="text">
      <string>0</string>
@@ -1498,7 +1501,7 @@
      <rect>
       <x>470</x>
       <y>0</y>
-      <width>91</width>
+      <width>95</width>
       <height>61</height>
      </rect>
     </property>
@@ -1545,6 +1548,19 @@
     </property>
     <property name="text">
      <string>clear plot</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_credit_calc">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>430</y>
+      <width>361</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Move to Credit calculator</string>
     </property>
    </widget>
   </widget>

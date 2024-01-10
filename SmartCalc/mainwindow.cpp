@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    credit = new CreditForm();
+    connect(credit, &CreditForm::firstWindow, this, &MainWindow::show);
+
     connect(ui->pushButton_0, SIGNAL(clicked()), this, SLOT(convert_buttons()));
     connect(ui->pushButton_1, SIGNAL(clicked()), this, SLOT(convert_buttons()));
     connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(convert_buttons()));
@@ -53,9 +56,7 @@ void MainWindow::convert_buttons()
 {
     QPushButton * button = (QPushButton *)sender();
 
-    // if (ui->result->text() == "0" && button->text() != ",") {
-    //     ui->result->clear();
-    // }
+    // добавление символа или функции в выражение
     if (ui->result->text() == "0" && strchr("^/*,", *button->text().toStdString().c_str()) == 0 && button->text() != "mod") {
            ui->result->clear();
     }
@@ -76,6 +77,7 @@ void MainWindow::on_pushButton_equal_clicked()
     double result = 0.;
     int error = SUCCESS;
 
+    // если в выражении есть x
     if (input.contains('x')) {
         node_t * output_list = NULL;
         error = convert_polish_notation (&output_list, (char*)input.toStdString().c_str());
@@ -96,7 +98,7 @@ void MainWindow::on_pushButton_equal_clicked()
         if (error != SUCCESS)
             ui->result->setText("ERROR");
     }
-    else {
+    else { // обычное выражение
         error = smart_calc( (char*)input.toStdString().c_str(), &result);
 
         if (std::isnan(result) || error !=SUCCESS) {
@@ -207,12 +209,14 @@ void MainWindow::on_pushButton_clear_plot_clicked()
     ui->doubleSpinBox_y_min->setValue(-10.0);
     ui->doubleSpinBox_y_max->setValue(10.0);
 
+    // удаляем график
     ui->widget->clearGraphs();
     ui->widget->replot();
 }
 
 void MainWindow::on_Set_X_clicked()
 {
+    // проверка на валидные значения
     if (strspn(ui->result->text().toStdString().c_str(), "1234567890.e𝝅") > 0) {
         ui->x_value->setText(ui->result->text());
         ui->result->setText("0");
@@ -227,4 +231,12 @@ void MainWindow::on_Clear_X_clicked()
     ui->x_value->setText("0");
 }
 
+
+
+void MainWindow::on_pushButton_credit_calc_clicked()
+{
+    credit->resize(1000,600);
+    credit->show();
+    this->close();
+}
 

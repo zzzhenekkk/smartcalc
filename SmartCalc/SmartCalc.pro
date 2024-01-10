@@ -11,6 +11,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    creditform.cpp \
     main.cpp \
     mainwindow.cpp \
     "C:\Users\Андрей\Desktop\школа 21\base\smartcalc\s21_smartcalc.c" \
@@ -18,10 +19,12 @@ SOURCES += \
 
 HEADERS += \
     "C:/Users/Андрей/Desktop/школа 21/base/smartcalc/s21_smartcalc.h" \
+    creditform.h \
     mainwindow.h \
     qcustomplot.h
 
 FORMS += \
+    creditform.ui \
     mainwindow.ui
 
 # Default rules for deployment.

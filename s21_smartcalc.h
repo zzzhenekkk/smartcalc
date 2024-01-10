@@ -22,6 +22,9 @@
 #define GRAPH_ON 1
 #define GRAPH_OFF 0
 
+#define ANNUITET 1
+#define DIFF 2
+
 typedef enum { EMPTY = -1,
                NUMBER,
                X_NUMBER,
@@ -97,7 +100,7 @@ int is_binary(node_t * cur);
 // ищет две точки в числе по длине len
 int two_doubles(char * str, int len);
 
-
+/************************************* ФУНКЦИИ РАСЧЕТА **************************************************/
 
 // основная функция
 int smart_calc(char * src, double * result);
@@ -125,5 +128,19 @@ int calculate(node_t * output_list, double * result, double x, int graph);
 
 // отдельно считаем польскую нотацию из строки, и отдаем список c обртной пн
 int convert_polish_notation (node_t ** output_list, char * src);
+
+/************************************* ФУНКЦИИ ДЛЯ КРЕДИТА **************************************************/
+
+// общая функция для расчета кредита (выдает 3 значения)
+void calulate_cradit(int type, double sum_credit, double percent, int period, int number, double *payment, double *extra, double *total);
+
+// считает ежемесячную выплату по аннуитету
+double annuitet(double sum_credit, double percent, int period);
+
+// считате общую сумму выплат дифференцированного кредита
+double diff_total(double sum_credit, double percent, int period);
+
+// считате выплату в определенный месяц для дифференцированного кредита
+double diff_payment(double sum_credit, double percent, int period, int number);
 
 #endif  // S21_SMARTCALC

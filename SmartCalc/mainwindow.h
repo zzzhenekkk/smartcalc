@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <creditform.h>
 
 #ifdef __cplusplus
 
@@ -23,6 +24,7 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -47,7 +49,10 @@ private slots:
 
     void on_pushButton_clear_plot_clicked();
 
+    void on_pushButton_credit_calc_clicked();
+
 private:
     Ui::MainWindow *ui;
+    CreditForm *credit;
 };
 #endif // MAINWINDOW_H
