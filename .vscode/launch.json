@@ -3,12 +3,11 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      // "name": "launch",
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/andrey_e"
+      "cwd": "/Users/zzzhenekkk/Documents/smartcalc",
+      "program": "/Users/zzzhenekkk/Documents/smartcalc/build/Debug/outDebug"
     }
   ]
 }

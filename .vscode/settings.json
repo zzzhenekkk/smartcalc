@@ -55,15 +55,5 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "files.associations": {
-    "s21_smartcalc.h": "c",
-    "bit": "c",
-    "__locale": "c",
-    "ios": "c"
-  },
-  "lldb.displayFormat": "auto",
-  "lldb.showDisassembly": "auto",
-  "lldb.dereferencePointers": true,
-  "lldb.consoleMode": "commands"
+  "C_Cpp_Runner.msvcSecureNoWarnings": false
 }
